@@ -6,7 +6,7 @@ Cette application permet de construire et visualiser une topologie réseau (nœu
 
 Vous pouvez utiliser l'application directement dans votre navigateur, sans rien installer, via Streamlit Community Cloud :
 
-- Ouvrez l'URL : `https://<ton-user>-simulate_network.streamlit.app`  (remplacez par l'URL réelle de votre déploiement).
+- Ouvrez l'URL : `https://simulatenetworkgit-qsf7av5qgm9tx8bvqx8qi4.streamlit.app/`  
 
 Dans cette version en ligne, utilisez la **console avancée** dans l'interface pour taper des commandes comme :
 
