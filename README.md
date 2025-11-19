@@ -22,25 +22,25 @@ Toutes les commandes sont décrites dans la section "Console avancée" de l'inte
 
 ### 2.1 Installation
 
-1. Cloner le dépôt :
-git clone https://github.com/soheibihaddaden/simulate_network.git
-cd simulate_network
+1.  Cloner le dépôt :
+- git clone https://github.com/soheibihaddaden/simulate_network.git
+- cd simulate_network
 
 
 
 2. Créer et activer l’environnement virtuel :
-Linux / macOS
+- Linux / macOS
 python3 -m venv venv
 source venv/bin/activate
 
-Windows (PowerShell)
+- Windows (PowerShell)
 python -m venv venv
 venv\Scripts\activate
 
 3. Installer les dépendances et rendre le script exécutable :
 
-pip install -r requirements.txt
-chmod +x run_network.sh
+- pip install -r requirements.txt
+- chmod +x run_network.sh
 
 
 
