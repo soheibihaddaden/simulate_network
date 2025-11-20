@@ -17,6 +17,11 @@ VALID_COMMANDS: List[str] = [
     "reset-network",
     "set-directed",
     "set-undirected",
+    "dijkstra",
+    "mst-kruskal",
+    "mst-prim",
+    "scc",   
+    "articulation",
     "help",
 ]
 
@@ -37,6 +42,11 @@ def format_help() -> str:
         "  reset-network",
         "  set-directed",
         "  set-undirected",
+        "  dijkstra <src> <dst>",
+        "  mst-kruskal",
+        "  mst-prim",
+        "  scc",   
+        "  articulation",
         "  help",
     ]
     return "\n".join(lines)
@@ -178,6 +188,67 @@ def handle_command(net: Network, cmd: str) -> str:
     if name == "set-undirected":
         net.set_directed(False)
         return "Mode graphe non orienté activé."
+
+    # dijkstra
+    if name == "dijkstra":
+
+        if len(args) != 2:
+            return "Usage : dijkstra <src> <dst>"
+
+        src, dst = args
+        path, dist = net.shortest_path_dijkstra(src, dst)
+
+        if path is None:
+            return f"Aucun chemin trouvé entre {src} et {dst}."
+
+        path_str = " -> ".join(path)
+        return (
+            f"Chemin le plus court (Dijkstra) de {src} à {dst} : {path_str}\n"
+            f"Latence totale = {dist} ms"
+        )
+    
+    # mst-kruskal
+    if name == "mst-kruskal":
+        edges = net.mst_edges(algo="kruskal")
+        if not edges:
+            return "Aucun arbre couvrant (graphe vide ?)."
+        lines = ["Arbre couvrant minimum (Kruskal) :"]
+        for u, v in edges:
+            w = net.graph[u][v].get("latency", 1)
+            lines.append(f"- {u} -- {v} (latence = {w} ms)")
+        return "\n".join(lines)
+
+    # mst-prim
+    if name == "mst-prim":
+        edges = net.mst_edges(algo="prim")
+        if not edges:
+            return "Aucun arbre couvrant (graphe vide ?)."
+        lines = ["Arbre couvrant minimum (Prim) :"]
+        for u, v in edges:
+            w = net.graph[u][v].get("latency", 1)
+            lines.append(f"- {u} -- {v} (latence = {w} ms)")
+        return "\n".join(lines)
+
+    if name == "scc":
+        comps = net.strongly_connected_components()
+        if not comps:
+            return "Aucune composante (graphe vide)."
+        lines = ["Composantes fortement connexes (Tarjan) :"]
+        for i, comp in enumerate(comps, 1):
+            nodes_str = ", ".join(comp)
+            lines.append(f"- C{i} : {nodes_str}")
+        return "\n".join(lines)
+    
+    # articulation
+    if name == "articulation":
+        aps = net.articulation_points()
+        if not aps:
+            return "Aucun point d'articulation (graphe biconnexe ou vide)."
+        lines = ["Points d'articulation (Tarjan) :"]
+        for n in aps:
+            lines.append(f"- {n}")
+        return "\n".join(lines)
+
 
     # help
     if name == "help":

@@ -1,5 +1,6 @@
 import networkx as nx
 
+from networkx.algorithms import tree as nx_tree
 
 class Network:
     def __init__(self, directed: bool = False):
@@ -9,6 +10,7 @@ class Network:
         """
         self.directed = directed
         self.graph = nx.DiGraph() if directed else nx.Graph()
+
         # graphe vide au démarrage
 
     def set_directed(self, directed: bool):
@@ -118,3 +120,74 @@ class Network:
         # relabel_nodes renvoie un nouveau graphe
         self.graph = nx.relabel_nodes(self.graph, mapping)
         return True
+
+    def shortest_path_dijkstra(self, src: str, dst: str):
+        if src not in self.graph or dst not in self.graph:
+            return None, None
+
+        try:
+            path = nx.dijkstra_path(
+                self.graph,
+                source=src,
+                target=dst,
+                weight="latency",
+            )
+            distance = nx.dijkstra_path_length(
+                self.graph,
+                source=src,
+                target=dst,
+                weight="latency",
+            )
+            return path, distance
+            
+        except nx.NetworkXNoPath:
+            return None, None
+
+    def strongly_connected_components(self):
+        """
+        Retourne la liste des composantes fortement connexes (Tarjan).
+        N'a de sens que pour un graphe orienté.
+        """
+        if not self.directed:
+            # on travaille sur version orientée si besoin
+            G = self.graph.to_directed()
+        else:
+            G = self.graph
+
+        comps = list(nx.strongly_connected_components(G))
+        # chaque comp est un set de nœuds
+        return [sorted(c) for c in comps]
+
+    def mst_edges(self, algo: str = "kruskal"):
+        """
+        Retourne la liste des arêtes de l'arbre couvrant minimum
+        selon l'algorithme choisi : 'kruskal' ou 'prim'.
+        Utilise l'attribut 'latency' comme poids.
+        """
+        if self.directed:
+            # MST classique sur graphe non orienté
+            G = self.graph.to_undirected()
+        else:
+            G = self.graph
+
+        if G.number_of_nodes() == 0:
+            return []
+
+        mst_iter = nx_tree.minimum_spanning_edges(
+            G,
+            algorithm=algo,
+            weight="latency",
+            data=False,   # on veut juste (u, v)
+        )
+        return list(mst_iter)
+
+    def articulation_points(self):
+        """
+        Retourne la liste des points d'articulation (Tarjan) sur le graphe non orienté.
+        """
+        if self.directed:
+            G = self.graph.to_undirected()
+        else:
+            G = self.graph
+
+        return list(nx.articulation_points(G))

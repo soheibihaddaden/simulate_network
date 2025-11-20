@@ -41,6 +41,17 @@ if "network" not in st.session_state:
     from state import save_network
     save_network(st.session_state.network)
 
+if "shortest_path" not in st.session_state:
+    st.session_state.shortest_path = None
+
+if "mst_edges" not in st.session_state:
+    st.session_state.mst_edges = None      # liste d'arêtes [(u,v), ...]
+
+if "scc_list" not in st.session_state:
+    st.session_state.scc_list = None       # liste de composantes [ [n1,n2], ... ]
+
+if "articulation_nodes" not in st.session_state:
+    st.session_state.articulation_nodes = None 
 
 if "command_history" not in st.session_state:
     st.session_state.command_history = []
@@ -84,23 +95,29 @@ with col_left:
         st.subheader("Console avancée")
 
         st.markdown(
+                        """
+            Commandes disponibles (exemples) :
+            - `list-nodes`
+            - `list-links`
+            - `show-node R1`
+            - `simulate-ping R1 R3`
+            - `add-node R1`
+            - `add-link R2 R1 10`
+            - `delete-node R1`
+            - `delete-link R1 R2`
+            - `update-link R1 R2 15`
+            - `rename-node R1 R10`
+            - `reset-network`
+            - `set-directed`
+            - `set-undirected`
+            - `dijkstra R1 R2`
+            - `mst-kruskal`
+            - `mst-prim`
+            - `scc`
+            - `articulation`
+
+            - `help`
             """
-Commandes disponibles (exemples) :
-- `list-nodes`
-- `list-links`
-- `show-node R1`
-- `simulate-ping R1 R3`
-- `add-node R5`
-- `add-link R2 R5 10`
-- `delete-node R1`
-- `delete-link R1 R2`
-- `update-link R1 R2 15`
-- `rename-node R1 R10`
-- `reset-network`
-- `set-directed`
-- `set-undirected`
-- `help`
-"""
         )
 
         cmd = st.text_input(
@@ -124,10 +141,10 @@ Commandes disponibles (exemples) :
 
     # ------ TEXTE D'INTRO & FORMULAIRES ------
     st.markdown(
+                """
+        Tu peux utiliser les formulaires ci-dessous pour construire ta topologie réseau
+        (nœuds, liens, mode orienté / non orienté).
         """
-Tu peux utiliser les formulaires ci-dessous pour construire ta topologie réseau
-(nœuds, liens, mode orienté / non orienté).
-"""
     )
 
     st.subheader("Édition du graphe")
@@ -302,6 +319,95 @@ Tu peux utiliser les formulaires ci-dessous pour construire ta topologie réseau
                         st.error("Renommage impossible (nom déjà utilisé ?).")
     else:
         st.info("Aucun nœud à renommer.")
+    
+    st.subheader("Plus court chemin (Dijkstra)")
+
+    nodes = sorted(st.session_state.network.graph.nodes())
+    if len(nodes) >= 2:
+        src = st.selectbox("Nœud source", nodes, key="dijkstra_src")
+        dst = st.selectbox("Nœud destination", nodes, key="dijkstra_dst")
+
+        cols = st.columns(2)
+        with cols[0]:
+            if st.button("Calculer le plus court chemin"):
+                path, dist = st.session_state.network.shortest_path_dijkstra(src, dst)
+                if path is None:
+                    st.warning(f"Aucun chemin trouvé entre {src} et {dst}.")
+                    st.session_state.shortest_path = None
+                else:
+                    st.success(
+                        f"Chemin le plus court de {src} à {dst} : "
+                        f"{' -> '.join(path)} (latence totale = {dist} ms)"
+                    )
+                    st.session_state.shortest_path = path
+                    save_network(st.session_state.network)
+
+        with cols[1]:
+            if st.button("Effacer le chemin Dijkstra"):
+                st.session_state.shortest_path = None
+                st.info("Chemin Dijkstra effacé. La topologie reste inchangée.")
+    else:
+        st.info("Ajoute au moins deux nœuds pour utiliser Dijkstra.")
+    
+    
+    st.subheader("Arbre couvrant minimum (Kruskal / Prim)")
+
+    col_m1, col_m2, col_m3 = st.columns(3)
+
+    with col_m1:
+            if st.button("MST (Kruskal)"):
+                edges = st.session_state.network.mst_edges(algo="kruskal")
+                if not edges:
+                    st.warning("Aucun arbre couvrant (graphe vide ?).")
+                    st.session_state.mst_edges = None
+                else:
+                    st.session_state.mst_edges = edges
+                    st.success(f"ACM (Kruskal) calculé avec {len(edges)} arêtes.")
+
+    with col_m2:
+            if st.button("MST (Prim)"):
+                edges = st.session_state.network.mst_edges(algo="prim")
+                if not edges:
+                    st.warning("Aucun arbre couvrant (graphe vide ?).")
+                    st.session_state.mst_edges = None
+                else:
+                    st.session_state.mst_edges = edges
+                    st.success(f"ACM (Prim) calculé avec {len(edges)} arêtes.")
+
+    with col_m3:
+            if st.button("Effacer MST"):
+                st.session_state.mst_edges = None
+                st.info("Résultat MST effacé.")
+
+
+    st.subheader("Analyse de connectivité (Tarjan)")
+
+    col_t1, col_t2, col_t3 = st.columns(3)
+
+    with col_t1:
+     if st.button("CFC"):
+        scc = st.session_state.network.strongly_connected_components()
+        st.session_state.scc_list = scc
+        if not scc:
+            st.warning("Aucune composante (graphe vide).")
+        else:
+            st.success(f"{len(scc)} composante(s) fortement connexe(s) trouvée(s).")
+
+    with col_t2:
+     if st.button("Points d'articulation"):
+        aps = st.session_state.network.articulation_points()
+        st.session_state.articulation_nodes = aps
+        if not aps:
+            st.info("Aucun point d'articulation.")
+        else:
+            st.success(f"{len(aps)} point(s) d'articulation trouvé(s).")
+
+    with col_t3:
+     if st.button("Effacer Tarjan"):
+        st.session_state.scc_list = None
+        st.session_state.articulation_nodes = None
+        st.info("Résultats Tarjan effacés.")
+  
 
 # ===== Colonne droite : topologie =====
 with col_right:
@@ -389,5 +495,49 @@ with col_right:
                 )
 
             ax.axis("off")
+        path = st.session_state.get("shortest_path")
+        if path:
+            path_edges = list(zip(path, path[1:]))  # (u,v) pour chaque segment
+            # nœuds du chemin en rouge
+            nx.draw_networkx_nodes(
+                net.graph,
+                pos,
+                nodelist=path,
+                node_color="red",
+                ax=ax,
+            )
+            # arêtes du chemin en rouge et plus épaisses
+            nx.draw_networkx_edges(
+                net.graph,
+                pos,
+                edgelist=path_edges,
+                edge_color="red",
+                width=3,
+                ax=ax,
+            )
+        
+        mst_edges = st.session_state.get("mst_edges")
+        if mst_edges:
+         nx.draw_networkx_edges(
+            net.graph, pos,
+            edgelist=mst_edges,
+            edge_color="green",
+            width=3,
+            style="dashed",
+            arrows=net.directed,
+            ax=ax,
+        )
 
+        # 3) Tarjan : points d'articulation en orange
+        ap_nodes = st.session_state.get("articulation_nodes")
+        if ap_nodes:
+         nx.draw_networkx_nodes(
+            net.graph, pos,
+            nodelist=ap_nodes,
+            node_color="orange",
+            node_size=600,
+            ax=ax,
+        )
+
+        ax.set_axis_off()
         st.pyplot(fig)
