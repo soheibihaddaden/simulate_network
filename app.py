@@ -490,16 +490,20 @@ elif page== "analyse":
                 st.info("Résultats Tarjan effacés.")
 
         st.markdown("---")
+        
         st.subheader("Analyse de cycles")
-
         if st.button("Tester si le graphe est acyclique"):
-            if net.is_acyclic():
-                if net.directed:
-                    st.success("Le graphe est acyclique (DAG).")
-                else:
-                    st.success("Le graphe est acyclique (forêt, aucun cycle).")
+            if net.graph.number_of_nodes() == 0:
+                st.info("Graphe vide : considéré comme acyclique (aucun nœud, aucun cycle).")
             else:
-                st.error("Le graphe contient au moins un cycle.")
+                if net.is_acyclic():
+                    if net.directed:
+                        st.success("Le graphe est acyclique (DAG).")
+                    else:
+                        st.success("Le graphe est acyclique (forêt, aucun cycle).")
+                else:
+                    st.error("Le graphe contient au moins un cycle.")
+
 
     with col_a2:
         with st.container(key="topology_box_analyse"):
@@ -511,7 +515,7 @@ elif page== "analyse":
 # =========================
 
 elif page=="console":
-    
+
     col_c1, col_c2 = st.columns([1.3, 1.7])
 
     with col_c1:
