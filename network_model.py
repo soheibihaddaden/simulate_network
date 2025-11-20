@@ -192,20 +192,20 @@ class Network:
         return list(nx.articulation_points(G))
 
     def is_acyclic(self) -> bool:
-    """
-    Retourne True si le graphe est acyclique, False sinon.
+        """
+        Retourne True si le graphe est acyclique, False sinon.
 
-    - Graphe vide : considéré comme acyclique.
-    - Orienté : teste si c'est un DAG.
-    - Non orienté : teste s'il s'agit d'une forêt (aucun cycle).
-    """
-    # Cas graphe vide : éviter NetworkXPointlessConcept
-    if self.graph.number_of_nodes() == 0:
-        return True
+        - Graphe vide : considéré comme acyclique.
+        - Orienté : teste si c'est un DAG.
+        - Non orienté : teste s'il s'agit d'une forêt (aucun cycle).
+        """
+        # Cas graphe vide : éviter NetworkXPointlessConcept
+        if self.graph.number_of_nodes() == 0:
+            return True
 
-    if self.directed:
-        # DAG = directed acyclic graph
-        return nx.is_directed_acyclic_graph(self.graph)
-    else:
-        # Une forêt est un graphe non orienté sans cycles
-        return nx_tree.is_forest(self.graph)
+        if self.directed:
+            # DAG = directed acyclic graph
+            return nx.is_directed_acyclic_graph(self.graph)
+        else:
+            # Une forêt est un graphe non orienté sans cycles
+            return nx_tree.is_forest(self.graph)
