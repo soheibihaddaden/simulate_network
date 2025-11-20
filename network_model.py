@@ -10,7 +10,7 @@ class Network:
         """
         self.directed = directed
         self.graph = nx.DiGraph() if directed else nx.Graph()
-
+        self.last_shortest_path = None
         # graphe vide au démarrage
 
     def set_directed(self, directed: bool):
@@ -117,7 +117,7 @@ class Network:
         if old_id not in self.graph or new_id in self.graph:
             return False
         mapping = {old_id: new_id}
-        # relabel_nodes renvoie un nouveau graphe
+        
         self.graph = nx.relabel_nodes(self.graph, mapping)
         return True
 
@@ -139,7 +139,6 @@ class Network:
                 weight="latency",
             )
             return path, distance
-            
         except nx.NetworkXNoPath:
             return None, None
 
@@ -191,3 +190,17 @@ class Network:
             G = self.graph
 
         return list(nx.articulation_points(G))
+
+    def is_acyclic(self) -> bool:
+        """
+        Retourne True si le graphe est acyclique, False sinon.
+
+        - Si le graphe est orienté : teste si c'est un DAG.
+        - Si le graphe est non orienté : teste s'il s'agit d'une forêt (aucun cycle).
+        """
+        if self.directed:
+            # DAG = directed acyclic graph
+            return nx.is_directed_acyclic_graph(self.graph)
+        else:
+            # Une forêt est un graphe non orienté sans cycles
+            return nx_tree.is_forest(self.graph)

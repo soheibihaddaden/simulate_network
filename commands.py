@@ -22,6 +22,7 @@ VALID_COMMANDS: List[str] = [
     "mst-prim",
     "scc",   
     "articulation",
+    "is-acyclic",
     "help",
 ]
 
@@ -46,6 +47,7 @@ def format_help() -> str:
         "  mst-kruskal",
         "  mst-prim",
         "  scc",   
+        "  is-acyclic",
         "  articulation",
         "  help",
     ]
@@ -249,6 +251,15 @@ def handle_command(net: Network, cmd: str) -> str:
             lines.append(f"- {n}")
         return "\n".join(lines)
 
+    if name == "is-acyclic":
+        if net.is_acyclic():
+            if net.directed:
+                return "Le graphe est acyclique (DAG)."
+            else:
+                return "Le graphe est acyclique (forêt, aucun cycle)."
+        else:
+            return "Le graphe contient au moins un cycle."
+    
 
     # help
     if name == "help":
@@ -260,3 +271,4 @@ def handle_command(net: Network, cmd: str) -> str:
         return f"Commande inconnue : {name}\nDid you mean: {suggestion[0]} ?"
     else:
         return f"Commande inconnue : {name}"
+    
