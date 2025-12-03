@@ -28,9 +28,10 @@ Toutes les commandes sont décrites dans la section "Console avancée" de l'inte
 ### 2.1 Installation
 
 #### 1.  Cloner le dépôt :
+```
 - git clone https://github.com/soheibihaddaden/simulate_network.git
 - cd simulate_network
-
+```
 
 
 #### 2. Créer et activer l’environnement virtuel :
