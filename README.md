@@ -7,6 +7,8 @@
 
 Cette application permet de construire et visualiser une topologie réseau (nœuds, liens, latences, graphe orienté / non orienté) via une interface Streamlit avec une console de commandes intégrée.
 
+---
+
 ## 1. Utilisation en ligne (Streamlit Cloud)
 
 Vous pouvez utiliser l'application directement dans votre navigateur, sans rien installer, via Streamlit Community Cloud :
@@ -24,6 +26,7 @@ Dans cette version en ligne, utilisez la **console avancée** dans l'interface p
 Toutes les commandes sont décrites dans la section "Console avancée" de l'interface.
 
 ## 2. Utilisation en local (avec CLI + interface)
+---
 
 ### 2.1 Installation
 
@@ -54,7 +57,7 @@ venv\Scripts\activate
 ```
 ./run_network.sh
 ```
---
+
 - Le script lance **Streamlit** en arrière-plan (`app.py`) et ouvre le serveur local sur `http://localhost:8501`.  
 - Dans le **terminal**, un interpréteur (`repl`) apparaît avec un prompt `>` : tapez directement les commandes, par exemple :
 
@@ -74,6 +77,7 @@ Vous pouvez :
 
 - cliquer sur **"Nouveau projet (réinitialiser)"** dans l'interface Streamlit pour vider complètement la topologie,  
 - ou taper `quit` dans le REPL : en quittant, la topologie est réinitialisée pour la prochaine session.
+---
 
 ## 3. Technologies utilisées
 
