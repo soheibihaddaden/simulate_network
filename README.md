@@ -25,8 +25,8 @@ Dans cette version en ligne, utilisez la **console avancée** dans l'interface p
 
 Toutes les commandes sont décrites dans la section "Console avancée" de l'interface.
 
-## 2. Utilisation en local (avec CLI + interface)
 ---
+## 2. Utilisation en local (avec CLI + interface)
 
 ### 2.1 Installation
 
