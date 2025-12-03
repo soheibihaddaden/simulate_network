@@ -51,9 +51,10 @@ venv\Scripts\activate
 
 
 ### 2.2 Lancement
+```
 ./run_network.sh
-
-
+```
+--
 - Le script lance **Streamlit** en arrière-plan (`app.py`) et ouvre le serveur local sur `http://localhost:8501`.  
 - Dans le **terminal**, un interpréteur (`repl`) apparaît avec un prompt `>` : tapez directement les commandes, par exemple :
 
