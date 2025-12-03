@@ -1,4 +1,9 @@
 # Interpréteur de topologie réseau (Streamlit)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.x-ff4b4b?logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![NetworkX](https://img.shields.io/badge/NetworkX-graphs-blue)](https://networkx.org/)
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-plotting-11557c)](https://matplotlib.org/)
 
 Cette application permet de construire et visualiser une topologie réseau (nœuds, liens, latences, graphe orienté / non orienté) via une interface Streamlit avec une console de commandes intégrée.
 
