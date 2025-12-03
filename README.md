@@ -91,12 +91,12 @@ Vous pouvez :
 - [Typer](https://typer.tiangolo.com/) pour la CLI locale.
 
 
-
+---
 # Licence
 
 Ce projet est distribué sous licence MIT. Vous êtes libre de l’utiliser, le modifier et le redistribuer, sous réserve de conserver le texte de la licence ci-dessous.
 MIT License
-
+---
 Copyright (c) 2025 IHADDADEN SOHEIB
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
