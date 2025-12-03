@@ -95,7 +95,6 @@ Vous pouvez :
 # Licence
 
 Ce projet est distribué sous licence MIT. Vous êtes libre de l’utiliser, le modifier et le redistribuer, sous réserve de conserver le texte de la licence ci-dessous.
-
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
