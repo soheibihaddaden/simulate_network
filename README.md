@@ -39,18 +39,22 @@ Toutes les commandes sont décrites dans la section "Console avancée" de l'inte
 
 #### 2. Créer et activer l’environnement virtuel :
 - Linux / macOS
+```
 python3 -m venv venv &&
 source venv/bin/activate
+```
 
 - Windows (PowerShell)
+```
 python -m venv venv &&
 venv\Scripts\activate
-
+```
 #### 3. Installer les dépendances et rendre le script exécutable :
 
+```
 - pip install -r requirements.txt
 - chmod +x run_network.sh
-
+```
 
 
 ### 2.2 Lancement
